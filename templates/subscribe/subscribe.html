@@ -1,0 +1,71 @@
+{% extends "subscribe/base_email.html" %}
+
+{% block title %}Subscribe{% endblock %}
+{% block content %}
+
+
+    <style>
+        .login,
+        .image {
+            min-height: 100vh;
+        }
+
+        .bg-image {
+            background-image: url('https://assets.thehansindia.com/h-upload/2021/08/17/1102463-pain.webp');
+            background-size: cover;
+            background-position: center center;
+        }
+
+        .container-fluid {
+            max-width: 100%;
+        }
+
+        .account-form input {
+            border: 2px solid #ccc;
+            height: calc(2em + .75rem + 2px);
+        }
+
+        .account-form input:focus {
+            border-color: #1497ff;
+            box-shadow: inset 0 0px 0px rgba(0, 0, 0, 0.075), 0 0 0px rgba(255, 0, 0, 0.6);
+        }
+    </style>
+    <div class="container-fluid">
+        <div class="row no-gutter">
+            <div class="col-md-6 bg-light">
+                <div class="login d-flex align-items-center py-5">
+                    <div class="container">
+                        {% if is_subscribed %}
+                            <div class="row">
+                                <div class="col-8 col-md-8 mx-auto">
+                                    <p class="h4 mb-4 font-weight-bold">Thank you for subscription!</p>
+                                </div>
+                            </div>
+                            <form action="{% url 'index' %}" class="col-md">
+                                <div class="col-8 col-md-8 mx-auto">
+                                    <button type="submit" class="btn btn-primary" style="text-align: center">Home
+                                    </button>
+                                </div>
+                            </form>
+                        {% else %}
+                            <div class="row">
+                                <div class="col-8 col-md-8  mx-auto">
+                                    <p class="h4 mb-4 font-weight-bold">Subscribe to Sofia Weather Forecast</p>
+                                    <form action="{% url 'subscribe' %}" method="post">
+                                        Email: {{ form.email }}
+                                        Name: {{ form.name }}
+                                        {% csrf_token %}
+                                        <button class="btn btn-dark btn-block py-2 mb-4 mt-5 font-weight-bold"
+                                                type="submit" value="Log-in">Subscribe
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-none d-md-flex bg-image"></div>
+        </div>
+    </div>
+{% endblock %}

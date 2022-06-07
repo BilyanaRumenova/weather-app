@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.6.1/slate/bootstrap.min.css"
+          integrity="sha512-vcxGhXoYp4V+Px82NLfIO/aoZjAXBnkVDNaII83WBgEe5bfPGD1wgUu9Av3+IzTh3ilPiEie5Zc21hrk84oBUg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <title>Sofia Weather </title>
+</head>
+
+<body>
+<div class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+    <div class="container">
+        <a href="../" class="navbar-brand">Weather App <span style="color: rgb(39, 117, 161);"> <strong> - Django
+            Framework</strong>
+        </span> </a>
+        <a href="https://openweathermap.org" class="navbar-tech">OpenWeather - Get Your API</a>
+    </div>
+</div>
+
+<br/><br/> <br>
+<div id="jumbotron" class="jumbotron" style="text-align: center; margin-top:-50px">
+    <h1 class="display-5">Sofia Weather Forecast </h1>
+    <img src="{% static 'images/weather.png' %}" class="image" style="width:100px; margin-bottom:-50px;">
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <form action="{% url 'subscribe' %}" method="post" class="col-md">
+        {% csrf_token %}
+        <div class=" input-group">
+            <button type="submit" class="btn btn-primary" style="text-align: center">Subscribe</button>
+        </div>
+    </form>
+
+</nav>
+<br> <br>
+<div class="row">
+    {% if current_weather %}
+        <h4><span class="col d-flex justify-content-center"></span></h4>
+        <div class="col d-flex justify-content-center">
+        <div class=" card text-black bg-light mb-6">
+
+        <div class=" card-body">
+        <h4><span class="col d-flex justify-content-center">Weather today :</span></h4>
+            <h4><span class="badge badge-primary">City :</span> {{ current_weather.city }}</h4>
+            <h4><span class="badge badge-primary">Temperature :</span> {{ current_weather.temperature }}</h4>
+            <h4><span class="badge badge-primary">Feels like :</span> {{ current_weather.feels_like }}</h4>
+            <h4><span class="badge badge-primary">Humidity : </span> {{ current_weather.humidity }}</h4>
+            <h4><span class="badge badge-primary">Forecast : </span> {{ main }} <img
+                    src="http://openweathermap.org/img/w/{{ current_weather.weather_icon }}.png" alt="Image"
+                    style="width:70px"></h4>
+            <h4><span class="badge badge-primary">Description : </span> {{ current_weather.description }}</h4>
+            <h4><span class="badge badge-primary">Min temperature : </span> {{ current_weather.min_temp }}</h4>
+            <h4><span class="badge badge-primary">Max temperature : </span> {{ current_weather.max_temp }}</h4>
+            <h4><span class="badge badge-primary">Time : </span> {{ current_weather.date }}</h4>
+        </div>
+    {% endif %}
+
+    <div>
+        <br/><br/> <br>
+
+        <h4><span class="col d-flex justify-content-center">Weather this week :</span></h4>
+        {% if weather_weekly %}
+            {% for forecast in weather_weekly.daily_forecast %}
+                <div class=" card-body">
+                    <div class="justify-content-center">{{ forecast.date }}</div>
+
+                    <h4><span class="badge badge-primary">Temperature : </span> {{ forecast.temp.day }}</h4>
+                    <h4><span class="badge badge-primary">Forecast : </span>
+                        {% for w in forecast.weather %}<img
+                                src="http://openweathermap.org/img/w/{{ w.icon }}.png" alt="Image"
+                                style="width:70px"></h4>
+                        {% endfor %}
+                    <h4><span class="badge badge-primary">Description : </span>
+                        {% for w in forecast.weather %}
+                            {{ w.description }}</h4>
+                        {% endfor %}
+                    <h4><span class="badge badge-primary">Min temperature : </span> {{ forecast.temp.min }}</h4>
+                    <h4><span class="badge badge-primary">Max temperature : </span> {{ forecast.temp.max }}</h4>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    </div>
+
+</body>
+
+</html>
