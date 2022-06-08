@@ -1,0 +1,5 @@
+Hello, {{name}}!
+
+Thank you for subscription!!
+You can check the current weather in Sofia here:
+"http://127.0.0.1:8000"

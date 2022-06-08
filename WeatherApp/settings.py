@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'celery',
     'django_celery_results',
+    'django_celery_beat',
 
     'sofia_weather',
 ]
@@ -137,3 +138,15 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Sofia'
 CELERY_RESULT_BACKEND = 'django-db'
+
+#Celery Beat settings
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+#Gmail configuration settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'test.bilyana@gmail.com'
+EMAIL_HOST_PASSWORD = 'uudfgtrureqxfocb'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Celery testing <test.bilyana@gmail.com>'

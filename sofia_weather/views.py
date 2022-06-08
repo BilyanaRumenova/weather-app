@@ -7,7 +7,7 @@ from django.views.generic import CreateView, TemplateView, FormView
 
 from sofia_weather.forms import SubscribedUsersForm
 from sofia_weather.models import SubscribedUsers
-from sofia_weather.tasks import test_func
+from sofia_weather.tasks import test_func, send_email_after_subscription_task
 
 
 class IndexView(TemplateView):
@@ -51,7 +51,6 @@ class IndexView(TemplateView):
             'current_weather': current_weather,
             'weather_weekly': weather_weekly,
         }
-        test_func.delay()
         return context
 
 
@@ -71,7 +70,8 @@ class SubscribeUserView(FormView):
         subscriber = form.save(commit=False)
         subscriber.save()
         is_subscribed = True
-        form.send_email()
+        # form.send_email()
+        send_email_after_subscription_task.delay()
         context = {
             'is_subscribed': is_subscribed
         }
