@@ -7,6 +7,7 @@ from django.views.generic import CreateView, TemplateView, FormView
 
 from sofia_weather.forms import SubscribedUsersForm
 from sofia_weather.models import SubscribedUsers
+from sofia_weather.tasks import test_func
 
 
 class IndexView(TemplateView):
@@ -50,7 +51,7 @@ class IndexView(TemplateView):
             'current_weather': current_weather,
             'weather_weekly': weather_weekly,
         }
-
+        test_func.delay()
         return context
 
 
