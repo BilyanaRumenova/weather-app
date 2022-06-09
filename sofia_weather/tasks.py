@@ -31,6 +31,31 @@ def send_email_after_subscription_task(email, name):
 
 
 @shared_task
+def send_periodic_email_task():
+    subscribers = SubscribedUsers.objects.all()
+
+    for subscriber in subscribers:
+        email = subscriber.email
+        name = subscriber.name
+
+        subject = 'Welcome to Sofia Weather'
+        message = f'Hello {name}!\n' \
+                  f'Here is your weather forecast'
+        to_email = email
+        recipient_list = [to_email, ]
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=recipient_list,
+            fail_silently=True
+        )
+
+    logger.info('Mail sending.......')
+    return 'Periodic task sent'
+
+
+@shared_task
 def test_func():
     for i in range(10):
         sleep(1)
