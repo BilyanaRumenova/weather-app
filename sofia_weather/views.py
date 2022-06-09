@@ -70,8 +70,10 @@ class SubscribeUserView(FormView):
         subscriber = form.save(commit=False)
         subscriber.save()
         is_subscribed = True
-        # form.send_email()
-        send_email_after_subscription_task.delay()
+        email = subscriber.email
+        name = subscriber.name
+        send_email_after_subscription_task.delay(email, name)
+
         context = {
             'is_subscribed': is_subscribed
         }

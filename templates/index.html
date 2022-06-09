@@ -9,6 +9,13 @@
           integrity="sha512-vcxGhXoYp4V+Px82NLfIO/aoZjAXBnkVDNaII83WBgEe5bfPGD1wgUu9Av3+IzTh3ilPiEie5Zc21hrk84oBUg=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <title>Sofia Weather </title>
+
+    <style>
+        .text-center {
+            text-align: center;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -30,7 +37,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <form action="{% url 'subscribe' %}" method="post" class="col-md">
         {% csrf_token %}
-        <div class=" input-group">
+        <div class="text-center">
             <button type="submit" class="btn btn-primary" style="text-align: center">Subscribe</button>
         </div>
     </form>
@@ -44,7 +51,7 @@
         <div class=" card text-black bg-light mb-6">
 
         <div class=" card-body">
-        <h4><span class="col d-flex justify-content-center">Weather today :</span></h4>
+            <h4><span class="col d-flex justify-content-center">Weather today :</span></h4>
             <h4><span class="badge badge-primary">City :</span> {{ current_weather.city }}</h4>
             <h4><span class="badge badge-primary">Temperature :</span> {{ current_weather.temperature }}</h4>
             <h4><span class="badge badge-primary">Feels like :</span> {{ current_weather.feels_like }}</h4>

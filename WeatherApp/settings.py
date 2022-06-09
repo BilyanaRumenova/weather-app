@@ -149,4 +149,3 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'test.bilyana@gmail.com'
 EMAIL_HOST_PASSWORD = 'uudfgtrureqxfocb'
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'Celery testing <test.bilyana@gmail.com>'
