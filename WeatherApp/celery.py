@@ -21,7 +21,11 @@ app.conf.beat_schedule = {
     'send_weather_to_client_every_day': {
         'task': 'sofia_weather.tasks.send_weather_email_task',
         'schedule': crontab(hour=16, minute=51),
-    }
+    },
+    'create_weather_screenshot_every_day': {
+        'task': 'sofia_weather.tasks.create_screenshot_task',
+        'schedule': crontab(hour=13, minute=00),
+    },
 }
 
 # Load task modules from all registered Django apps.
