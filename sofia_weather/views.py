@@ -1,13 +1,12 @@
 from datetime import datetime, timedelta
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 import requests
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, FormView
+from django.views.generic import TemplateView, FormView
 
 from sofia_weather.forms import SubscribedUsersForm
-from sofia_weather.models import SubscribedUsers
-from sofia_weather.tasks import test_func, send_email_after_subscription_task
+from sofia_weather.tasks import send_email_after_subscription_task
 
 
 class IndexView(TemplateView):
@@ -78,22 +77,5 @@ class SubscribeUserView(FormView):
             'is_subscribed': is_subscribed
         }
         return render(self.request, 'subscribe/subscribe.html', context)
-
-
-# class SubscribeUserView(CreateView):
-#     model = SubscribedUsers
-#     form_class = SubscribedUsersForm
-#     template_name = 'subscribe/subscribe.html'
-#     # success_url = reverse_lazy('subscribe')
-#
-#     def form_valid(self, form):
-#         subscriber = form.save(commit=False)
-#         is_subscribed = True
-#         subscriber.save()
-#         form.send_email()
-#         context = {
-#                     'is_subscribed': is_subscribed
-#                 }
-#         return render(self.request, 'subscribe/subscribe.html', context)
 
 

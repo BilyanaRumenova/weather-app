@@ -1,15 +1,13 @@
-import os
 import random
 from datetime import datetime, timedelta
+from email.mime.image import MIMEImage
 from time import sleep
 
 import requests
-from Screenshot import Screenshot_Clipping
 from celery.utils.log import get_task_logger
 from celery import shared_task
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import send_mail, EmailMessage, EmailMultiAlternatives
 from django.template.loader import get_template
-from selenium.webdriver.chrome.options import Options
 
 from WeatherApp import settings
 from sofia_weather.models import SubscribedUsers
@@ -25,7 +23,7 @@ logger = get_task_logger(__name__)
 def send_email_after_subscription_task(email, name):
     email = SubscribedUsers.objects.get(email=email)
 
-    mail_subject = "Test Celery"
+    mail_subject = "Welcome to Sofia Weather"
     link = 'http://127.0.0.1:8000'
     message = f'Hello, {name}!\n' \
               f' Thank you for subscription!\n' \
@@ -73,7 +71,6 @@ def send_weather_email_task():
 
     for subscriber in subscribers:
         email = subscriber.email
-        name = subscriber.name
 
         city = 'Sofia'
         city_lat = '42.6951'
@@ -113,7 +110,7 @@ def send_weather_email_task():
             'weather_weekly': weather_weekly,
         }
 
-        subject = 'Welcome to Sofia Weather'
+        subject = 'Weather in Sofia'
         message = get_template('email/email_weather.html').render(context)
 
         to_email = email
@@ -126,6 +123,54 @@ def send_weather_email_task():
         )
         msg.content_subtype = "html"
         msg.send()
+        return 'Sending emails done'
+
+
+@shared_task
+def send_screenshot_email_task():
+    subscribers = SubscribedUsers.objects.all()
+
+    driver = webdriver.Chrome(ChromeDriverManager().install())
+    url = 'http://127.0.0.1:8000'
+    driver.get(url)
+    driver.execute_script("document.body.style.zoom='30%'")
+    driver.set_window_size(5760, 3240, driver.window_handles[0])
+    driver.maximize_window()
+    sleep(10)
+
+    image_name = f'myimg{random.randint(1000, 9999)}.png'
+    driver.save_screenshot('screenshot.png')
+    image = Image.open('screenshot.png')
+    img = image.convert('RGB')
+    save_path = settings.MEDIA_ROOT / image_name
+    img.save(save_path)
+
+    for subscriber in subscribers:
+        email = subscriber.email
+        name = subscriber.name
+
+        subject = 'Welcome to Sofia Weather'
+        message = f'Hello, {name}! Here is your weekly Sofia forecast'
+        to_email = email
+        recipient_list = [to_email, ]
+
+        email = EmailMultiAlternatives(
+            subject=subject,
+            body=message,
+            from_email=settings.EMAIL_HOST_USER,
+            to=recipient_list if isinstance(recipient_list, list) else [recipient_list]
+        )
+
+        with open(save_path, mode='rb') as f:
+            weather_image = MIMEImage(f.read())
+            email.attach(weather_image)
+            weather_image.add_header('Content-ID', f'{image_name}')
+
+        email.send()
+
+        driver.quit()
+        logger.info('Email has been sent')
+
 
 @shared_task
 def create_screenshot_task():
