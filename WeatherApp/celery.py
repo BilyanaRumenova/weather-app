@@ -20,7 +20,7 @@ app.conf.beat_schedule = {
         'schedule': crontab(hour=18, minute=00)},
     'send_weather_to_client_every_day': {
         'task': 'sofia_weather.tasks.send_weather_email_task',
-        'schedule': crontab(hour=16, minute=30),
+        'schedule': crontab(hour=11, minute=28),
     },
     'create_weather_screenshot_every_day': {
         'task': 'sofia_weather.tasks.create_screenshot_task',

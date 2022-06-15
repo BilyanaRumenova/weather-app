@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django_celery_beat',
 
     'sofia_weather',
+    'api_weatherapp',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
