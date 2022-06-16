@@ -19,9 +19,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-n#s_q^16=ni-tqt_$$*u+qf1lpd3b&#le&k(b&wucas!0y^_rm'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -150,8 +147,5 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_HOST_USER = 'test.bilyana@gmail.com'
-EMAIL_HOST_PASSWORD = 'uudfgtrureqxfocb'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_USE_TLS = True
