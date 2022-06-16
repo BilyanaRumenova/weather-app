@@ -19,7 +19,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 logger = get_task_logger(__name__)
 
 
-@shared_task
+@shared_task(name='send_email_after_subscription')
 def send_email_after_subscription_task(email, name):
     email = SubscribedUsers.objects.get(email=email)
 
@@ -40,32 +40,7 @@ def send_email_after_subscription_task(email, name):
     return 'Done'
 
 
-@shared_task
-def send_periodic_email_task():
-    subscribers = SubscribedUsers.objects.all()
-
-    for subscriber in subscribers:
-        email = subscriber.email
-        name = subscriber.name
-
-        subject = 'Welcome to Sofia Weather'
-        message = f'Hello {name}!\n' \
-                  f'Here is your weather forecast'
-        to_email = email
-        recipient_list = [to_email, ]
-        send_mail(
-            subject=subject,
-            message=message,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=recipient_list,
-            fail_silently=True
-        )
-
-    logger.info('Mail sending.......')
-    return 'Periodic task sent'
-
-
-@shared_task
+@shared_task(acks_late=True, max_retries=5)
 def send_weather_email_task():
     subscribers = SubscribedUsers.objects.all()
 
@@ -149,8 +124,8 @@ def send_screenshot_email_task():
         email = subscriber.email
         name = subscriber.name
 
-        subject = 'Welcome to Sofia Weather'
-        message = f'Hello, {name}! Here is your weekly Sofia forecast'
+        subject = 'Weather in Sofia'
+        message = f'Hello, {name}! Here is your weekly forecast for Sofia'
         to_email = email
         recipient_list = [to_email, ]
 
@@ -172,51 +147,9 @@ def send_screenshot_email_task():
         logger.info('Email has been sent')
 
 
-@shared_task
-def create_screenshot_task():
-    driver = webdriver.Chrome(ChromeDriverManager().install())
-    url = 'http://127.0.0.1:8000'
-    driver.get(url)
-    driver.execute_script("document.body.style.zoom='30%'")
-    driver.set_window_size(5760, 3240, driver.window_handles[0])
-    driver.maximize_window()
-    sleep(10)
-
-    image_name = f'myimg{random.randint(1000, 9999)}.png'
-    driver.save_screenshot('screenshot.png')
-    image = Image.open('screenshot.png')
-    img = image.convert('RGB')
-    save_path = settings.MEDIA_ROOT/image_name
-    img.save(save_path)
-
-    driver.quit()
-    logger.info('Screenshot has been taken')
-
-# #working code
 # @shared_task
-# def create_screenshot_task():
-#     driver = webdriver.Chrome(ChromeDriverManager().install())
-#     url = 'http://127.0.0.1:8000'
-#     driver.get(url)
-#     sleep(2)
-#
-#     save_path = str(settings.MEDIA_ROOT)
-#     image_name = f'myimg{random.randint(1000, 9999)}.png'
-#
-#     Screenshot_Clipping.Screenshot().full_Screenshot(
-#         driver,
-#         save_path=save_path,
-#         image_name=image_name,
-#         load_wait_time=10
-#     )
-#
-#     driver.quit()
-#     logger.info('Screenshot has been taken')
-
-
-@shared_task
-def test_func():
-    for i in range(10):
-        sleep(1)
-        print(i)
-    return "Done"
+# def test_func():
+#     for i in range(10):
+#         sleep(1)
+#         print(i)
+#     return "Done"

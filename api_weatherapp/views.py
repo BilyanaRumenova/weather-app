@@ -1,16 +1,17 @@
 from datetime import datetime, timedelta
 
 from django.contrib.sites import requests
+from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import requests
 
 from api_weatherapp.serializers import SubscribedUsersSerializer
+from sofia_weather.tasks import send_email_after_subscription_task
 
 
 class WeatherView(APIView):
-    name = 'Weather'
 
     def get(self, request):
 
@@ -64,8 +65,16 @@ class WeatherView(APIView):
 
 
 class SubscribeView(CreateAPIView):
-    name = 'subscribe'
     serializer_class = SubscribedUsersSerializer
 
+    def post(self, request, *args, **kwargs):
+        subscriber_serializer = SubscribedUsersSerializer(data=request.data)
+        if subscriber_serializer.is_valid():
+            subscriber_serializer.save()
+            subscriber_name = request.data['name']
+            subscriber_email = request.data['email']
+            send_email_after_subscription_task.delay(subscriber_email, subscriber_name)
+            return Response(subscriber_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(subscriber_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
