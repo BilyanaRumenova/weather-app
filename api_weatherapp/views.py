@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.contrib.sites import requests
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
@@ -9,6 +11,7 @@ import requests
 
 from api_weatherapp.serializers import SubscribedUsersSerializer
 from sofia_weather.tasks import send_email_after_subscription_task
+from celery import current_app
 
 
 class WeatherView(APIView):
@@ -76,5 +79,20 @@ class SubscribeView(CreateAPIView):
             send_email_after_subscription_task.delay(subscriber_email, subscriber_name)
             return Response(subscriber_serializer.data, status=status.HTTP_201_CREATED)
         return Response(subscriber_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TaskView(APIView):
+    def get(self, request, task_id):
+        task = current_app.AsyncResult(task_id)
+        response_data = {
+            'task_status': task.status,
+            'task_id': task.id,
+            'date_done': task.date_done,
+        }
+
+        if task.status == 'SUCCESS':
+            response_data['results'] = task.get()
+
+        return Response(response_data)
 
 
