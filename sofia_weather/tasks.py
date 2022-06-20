@@ -147,9 +147,3 @@ def send_screenshot_email_task():
         logger.info('Email has been sent')
 
 
-# @shared_task
-# def test_func():
-#     for i in range(10):
-#         sleep(1)
-#         print(i)
-#     return "Done"
