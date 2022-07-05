@@ -98,7 +98,7 @@ def send_weather_email_task():
         )
         msg.content_subtype = "html"
         msg.send()
-        return 'Sending emails done'
+    return 'Sending emails done'
 
 
 @shared_task
