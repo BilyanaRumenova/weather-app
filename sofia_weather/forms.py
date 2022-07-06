@@ -2,7 +2,7 @@ from django import forms
 
 from sofia_weather.core.forms import BootstrapFormMixin
 from sofia_weather.models import SubscribedUsers
-from sofia_weather.tasks import send_email_after_subscription_task
+from celery_utils.tasks import send_email_after_subscription_task
 
 
 class SubscribedUsersForm(BootstrapFormMixin, forms.ModelForm):

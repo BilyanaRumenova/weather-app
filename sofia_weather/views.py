@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
 
 from sofia_weather.forms import SubscribedUsersForm
-from sofia_weather.tasks import send_email_after_subscription_task
+from celery_utils.tasks import send_email_after_subscription_task
 
 
 class IndexView(TemplateView):

@@ -1,8 +1,6 @@
 from datetime import datetime, timedelta
 
-from django.conf import settings
 from django.contrib.sites import requests
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
@@ -10,7 +8,7 @@ from rest_framework.views import APIView
 import requests
 
 from api_weatherapp.serializers import SubscribedUsersSerializer
-from sofia_weather.tasks import send_email_after_subscription_task
+from celery_utils.tasks import send_email_after_subscription_task
 from celery import current_app
 
 

@@ -16,11 +16,11 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Celery Beat Settings
 app.conf.beat_schedule = {
     'send_weather_to_client_every_day': {
-        'task': 'sofia_weather.tasks.send_weather_email_task',
-        'schedule': crontab(hour=19, minute=37),
+        'task': 'celery_utils.tasks.send_weather_email_task',
+        'schedule': crontab(hour=12, minute=45),
     },
     'send_mail_screenshot_every_day': {
-        'task': 'sofia_weather.tasks.send_screenshot_email_task',
+        'task': 'celery_utils.tasks.send_screenshot_email_task',
         'schedule': crontab(hour=18, minute=53),
     },
 }
