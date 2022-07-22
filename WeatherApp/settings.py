@@ -26,7 +26,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['WeatherApp-dev.eu-central-1.elasticbeanstalk.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['Weatherapptest-env.eba-qi8zmax9.eu-central-1.elasticbeanstalk.com', '127.0.0.1', 'localhost']
 
 INTERNAL_IPS = [
     "127.0.0.1",
