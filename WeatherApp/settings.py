@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'WeatherApp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-
+print(str(os.environ))
 if 'RDS_DB_NAME' in os.environ:
     DATABASES = {
         'default': {
