@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     'debug_toolbar',
-    'storages',
 
     'sofia_weather',
     'api_weatherapp',
